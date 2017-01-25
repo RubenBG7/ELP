@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 
 public class Main {
@@ -11,19 +12,21 @@ public class Main {
 
 	public static void main (String [ ] args) throws IOException {
 	
-		VentanaTablero.getInstance().setVisible(true);
-		//VentanaAlumnos.getInstance().setVisible(true);
 		
+		//VentanaAlumnos.getInstance().setVisible(true);
+		int numAlumnos = 45;/*Integer.parseInt(JOptionPane.showInputDialog(null, "Escribe el numero de alumnos"));*/
+		
+		VentanaTablero.getInstance(numAlumnos).setVisible(true);
 		
 		java.awt.Dimension pantallaTamano = Toolkit.getDefaultToolkit().getScreenSize();
-		int ancho = ((pantallaTamano.width / 2) - (VentanaAlumnos.getInstance().getWidth()) / 2);
-		int alto = (pantallaTamano.height / 2) - (VentanaAlumnos.getInstance().getHeight() );
+		int ancho = ((pantallaTamano.width / 2) - (VentanaAlumnos.getInstance(numAlumnos).getWidth()) / 2);
+		int alto = (pantallaTamano.height / 2) - (VentanaAlumnos.getInstance(numAlumnos).getHeight() );
 		
 
-		VentanaAlumnos.getInstance().setLocation(pantallaTamano.width-1,alto); // 1300 300
-		VentanaAlumnos.getInstance().setVisible(true);
+		VentanaAlumnos.getInstance(numAlumnos).setLocation(pantallaTamano.width-1,alto); // 1300 300
+		VentanaAlumnos.getInstance(numAlumnos).setVisible(true);
 
-		moverAutomaticamenteVentana(VentanaAlumnos.getInstance(),pantallaTamano.width-1,ancho*2,alto,alto, 1);
+		moverAutomaticamenteVentana(VentanaAlumnos.getInstance(numAlumnos),pantallaTamano.width-1,ancho*2,alto,alto, 1);
 
 	}
 	
