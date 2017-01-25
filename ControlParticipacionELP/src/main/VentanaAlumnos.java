@@ -3,6 +3,7 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -11,6 +12,7 @@ import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -29,16 +31,16 @@ public class VentanaAlumnos extends JFrame{
 	ImageIcon ucm = new ImageIcon("ucm.png");
 	private static VentanaAlumnos instancia = null;
 	
-	public static VentanaAlumnos getInstance() throws IOException{
+	public static VentanaAlumnos getInstance(int num) throws IOException{
 		
-		if(instancia == null) instancia = new VentanaAlumnos();
+		if(instancia == null) instancia = new VentanaAlumnos(num);
 		
 		return instancia;
 		
 	}
 	
 
-	public VentanaAlumnos() throws IOException{
+	public VentanaAlumnos(int numAlumnosString) throws IOException{
 		
 		
 		this.setSize(new Dimension(700, 500));
@@ -51,9 +53,11 @@ public class VentanaAlumnos extends JFrame{
 		
 		setResizable(false);
 		
-		inicializarAlumnos("alumnos.txt");
+		//int numAlumnosString = Integer.parseInt(JOptionPane.showInputDialog(null, "Escribe el numero de alumnos"));
 		
-		this.tablaNombres = new Tabla(this.alumnos);
+		inicializarAlumnos("alumnos.txt", numAlumnosString);
+		
+		this.tablaNombres = new Tabla(this.alumnos, numAlumnosString);
 		
 		this.add(tablaNombres, null);
 		
@@ -70,58 +74,65 @@ public class VentanaAlumnos extends JFrame{
 		
 	}
 	
-	public void inicializarAlumnos(String archivo) throws IOException{
+	public void inicializarAlumnos(String archivo, int numAlumnos) throws IOException{
 		
 		//Inicializamos los alumnos que vamos a tener 1 a 1;
 		String cadena = "";
 		char[] array = new char[100];
 		int numCaracteres = 0;
 		int i = 0;
+		
         FileReader f = new FileReader(archivo);
+        BufferedReader reader = new BufferedReader (f);
         
-        char caract = (char) f.read();
+       for(int k = 0; k < numAlumnos; k++){
         
-        while(caract != ' '){
-        
-        	while(caract != ','){
-        		
-	        	array[numCaracteres] = caract;
-	        	numCaracteres++;
-	        	caract = (char) f.read();
-	            
-        	}
-        	
-        	for(int j = 0; j < numCaracteres; j++){
-        		
-        		cadena += array[j];
-        		
-        	}
-        	
-        	this.alumnos[i] = new Alumno(cadena);
-        	numCaracteres = 0;
-        	cadena = "";
-        	caract = (char) f.read();
-            while(caract != '\r'){            	
-            	
-            	array[numCaracteres] = caract;
-	        	numCaracteres++;
-	        	caract = (char) f.read();
-            	
-            }
-            caract = (char) f.read();
-            
-            for(int j = 0; j < numCaracteres; j++){
-        		
-        		cadena += array[j];
-        		
-        	}
-            
-            this.alumnos[i].setIntervencionesTotales(Integer.parseInt(cadena));;
-            i++;
-            numCaracteres = 0;
-            cadena = "";
-            caract = (char) f.read();
-        }
+    	   String cad = reader.readLine();
+    	   
+    	   //for(int n = 0; n <cad.length (); n++) {
+    		   int n = 0;
+    		   char caract = cad.charAt(n);
+    		   cadena = "";
+    		   numCaracteres = 0;
+    		   
+    		   while(caract != ','){
+    			
+   	        	array[numCaracteres] = caract;
+   	        	numCaracteres++;
+   	        	n++;
+   	        	caract = cad.charAt(n);
+   	            
+           		}
+    		       		       		   
+    		   for(int j = 0; j < numCaracteres; j++){
+           		
+           		cadena += array[j];
+           		
+           		}
+    		   numCaracteres = 0;
+    		   this.alumnos[i] = new Alumno(cadena);
+           	   cadena = "";
+    		   
+    		   for (int h = n+1; h < cad.length(); h++){
+    			   
+    			   caract = cad.charAt(h);
+    			   array[numCaracteres] = caract;
+    			   numCaracteres++;
+    		   
+    		   }
+    		   
+    		   for(int j = 0; j < numCaracteres; j++){
+              		
+              		cadena += array[j];
+              		
+              	}
+    		   
+    		   this.alumnos[i].setIntervencionesTotales(Integer.parseInt(cadena));
+    		   cadena = "";   
+    		   i++;
+    	   }
+    	   
+    	 
         f.close();
         
         
@@ -130,7 +141,7 @@ public class VentanaAlumnos extends JFrame{
 	
 	}
 	
-	public void update(int a, int b, int cantidad){
+	public void update(int a, int b, int cantidad, int numAlumnos){
 
 		
 		actualizarAlumno(this.alum[a][b], cantidad);
@@ -141,7 +152,7 @@ public class VentanaAlumnos extends JFrame{
 		
 		this.tablaNombres = null;
 			
-		this.tablaNombres = new Tabla(this.alumnos);
+		this.tablaNombres = new Tabla(this.alumnos, numAlumnos);
 		
 		this.add(tablaNombres);
 		
@@ -171,6 +182,7 @@ public class VentanaAlumnos extends JFrame{
             	bw.write(this.alumnos[i].getNombre());
             	bw.write(",");
             	bw.write(String.valueOf(this.alumnos[i].getIntervencionesTotales()));
+            	if(i!=this.alumnos.length-1)
             	bw.newLine();
             	
             }
@@ -181,10 +193,10 @@ public class VentanaAlumnos extends JFrame{
             	bw.write(this.alumnos[i].getNombre());
             	bw.write(",");
             	bw.write(String.valueOf(this.alumnos[i].getIntervencionesTotales()));
+            	if(i!=this.alumnos.length-1)
             	bw.newLine();
             }
         }
-        bw.write(" ");
         bw.close();
 		
 		
@@ -205,18 +217,18 @@ public class VentanaAlumnos extends JFrame{
 		 
 		  private int contador = 0;
 		  
-		  public Tabla(Alumno[] alumnos) {
+		  public Tabla(Alumno[] alumnos, int numAlumnos) {
 					
 		    setLayout( new BorderLayout() );
 		    
 		    // Creamos las columnas y las cargamos con los datos que van a aparecer en la pantalla
 		    CreaColumnas();
-		    CargaDatos(alumnos);
+		    CargaDatos(alumnos, numAlumnos);
 		    
 		    // Creamos una instancia del componente Swing
 		    tabla = new JTable( datoColumna,titColumna );
 		    
-		    // Aquí se configuran algunos de los parámetros que permite variar la JTable
+		    // AquÃ­ se configuran algunos de los parÃ¡metros que permite variar la JTable
 		    tabla.setShowHorizontalLines( false );
 		    tabla.setRowSelectionAllowed( true );
 		    tabla.setColumnSelectionAllowed( true );
@@ -228,14 +240,14 @@ public class VentanaAlumnos extends JFrame{
 		    tabla.setSelectionBackground( Color.red );
 		    
 		    // Incorporamos la tabla a un panel que incorpora ya una barra
-		    // de desplazamiento, para que la visibilidad de la tabla sea automática
+		    // de desplazamiento, para que la visibilidad de la tabla sea automÃ¡tica
 		    panelScroll = new JScrollPane( tabla );
 		    add( panelScroll, BorderLayout.CENTER );
 		    
 		  }
 		  
 		  
-		  // Creamos las etiquetas que sirven de título a cada una de
+		  // Creamos las etiquetas que sirven de tÃ­tulo a cada una de
 		  // las columnas de la tabla
 		  public void CreaColumnas() {
 		    titColumna = new String[3];
@@ -250,14 +262,14 @@ public class VentanaAlumnos extends JFrame{
 		  }
 		  
 		  // Creamos los datos para cada uno de los elementos de la tabla
-		  public void CargaDatos(Alumno[] alumnos)
+		  public void CargaDatos(Alumno[] alumnos, int numAlumnos)
 		  {
-			  datoColumna = new String[45][3];
+			  datoColumna = new String[numAlumnos][3];
 		    
 			  for( int iX=0; iX < 3; iX++ ) 
 			  {
 				  contador = 0;
-				  for( int iY=0; iY < 45; iY++ ) 
+				  for( int iY=0; iY < numAlumnos; iY++ ) 
 				  {		      	  	  
 			    	  if(iX == 0)
 			    	  datoColumna[iY][iX] = alumnos[contador].getNombre();
