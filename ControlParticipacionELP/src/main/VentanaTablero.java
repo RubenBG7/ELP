@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class VentanaTablero extends JFrame implements ActionListener {
@@ -33,6 +34,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 	private JButton Undo;
 	private JLabel labelproy;
 	private JLabel labelprof;
+	private int numAlumnos;
 	
 	
 	ImageIcon face = new ImageIcon("man.png");
@@ -42,11 +44,11 @@ public class VentanaTablero extends JFrame implements ActionListener {
 	private JButton[][] nCasillas;
 	
 	
-	public static VentanaTablero getInstance(){
+	public static VentanaTablero getInstance(int num){
 		
 		if(instance == null){
 			
-			instance = new VentanaTablero();
+			instance = new VentanaTablero(num);
 			
 		}
 		
@@ -56,8 +58,9 @@ public class VentanaTablero extends JFrame implements ActionListener {
 	
 	
 	
-	public VentanaTablero(){
+	public VentanaTablero(int num){
 		
+		this.numAlumnos = num;
 		
 		initComponents();
 		
@@ -83,7 +86,6 @@ public class VentanaTablero extends JFrame implements ActionListener {
 		this.Undo.setBorderPainted(false);
 		this.labelprof = new JLabel("    PROFESOR");
 		this.labelproy = new JLabel("PANTALLA PROYECTOR");
-		
 		this.labelprof.setFont(new Font("Monospaced", Font.BOLD, 36));
 		this.labelproy.setFont(new Font("Monospaced", Font.BOLD, 35));
 		
@@ -124,11 +126,11 @@ public class VentanaTablero extends JFrame implements ActionListener {
 				
 				if(i == 7 && j > 2) 
 				{
-					// No creamos ning�n boton
+					// No creamos ningï¿½n boton
 				}
 				else
 				{
-					ImageIcon face0 = new ImageIcon("man.png");
+					ImageIcon face0 = new ImageIcon(/*"man.png"*/ "man.png");
 					Icon faceico0 = new ImageIcon(face0.getImage().getScaledInstance(90,90,Image.SCALE_SMOOTH));
 					JButton aux0 = new JButton(faceico0);
 					aux0.setBackground(new Color(212, 163, 107));
@@ -136,7 +138,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 					nCasillas[i][j].addActionListener(this);
 					contador++;
 									
-					if(contador < 25) // Esta condici�n es para dividir los botones en dos tableros
+					if(contador < 25) // Esta condiciï¿½n es para dividir los botones en dos tableros
 					{	
 					PTablero.add(aux0);
 					}
@@ -179,7 +181,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 					deshacer.coordenada_j = j;
 					ActivarUndo();
 					try {						
-						VentanaAlumnos.getInstance().update(i, j, 1);
+						VentanaAlumnos.getInstance(numAlumnos).update(i, j, 1, numAlumnos);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -191,7 +193,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 			this.Undo.setEnabled(false);
 			
 			try {
-				VentanaAlumnos.getInstance().update(deshacer.coordenada_i, deshacer.coordenada_j, -1);
+				VentanaAlumnos.getInstance(numAlumnos).update(deshacer.coordenada_i, deshacer.coordenada_j, -1, numAlumnos);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -221,7 +223,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 			 */
 			@Override
 			public void windowActivated(WindowEvent arg0) {
-				// TODO Ap�ndice de m�todo generado autom�ticamente
+				// TODO Apï¿½ndice de mï¿½todo generado automï¿½ticamente
 				
 			}
 
@@ -238,7 +240,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 			@Override
 			public void windowClosing(WindowEvent arg0) {
 				try {
-					VentanaAlumnos.getInstance().finalizarPrograma();
+					VentanaAlumnos.getInstance(numAlumnos).finalizarPrograma();
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -250,7 +252,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 			 */
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
-				// TODO Ap�ndice de m�todo generado autom�ticamente
+				// TODO Apï¿½ndice de mï¿½todo generado automï¿½ticamente
 				
 			}
 
@@ -259,7 +261,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 			 */
 			@Override
 			public void windowDeiconified(WindowEvent arg0) {
-				// TODO Ap�ndice de m�todo generado autom�ticamente
+				// TODO Apï¿½ndice de mï¿½todo generado automï¿½ticamente
 				
 			}
 
@@ -268,7 +270,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 			 */
 			@Override
 			public void windowIconified(WindowEvent arg0) {
-				// TODO Ap�ndice de m�todo generado autom�ticamente
+				// TODO Apï¿½ndice de mï¿½todo generado automï¿½ticamente
 				
 			}
 
@@ -277,7 +279,7 @@ public class VentanaTablero extends JFrame implements ActionListener {
 			 */
 			@Override
 			public void windowOpened(WindowEvent arg0) {
-				// TODO Ap�ndice de m�todo generado autom�ticamente
+				// TODO Apï¿½ndice de mï¿½todo generado automï¿½ticamente
 				
 			}
 		}
